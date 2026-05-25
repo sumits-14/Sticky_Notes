@@ -15,8 +15,8 @@ function DisplayThoughts({ notes, deleteNote }) {
                               <div className='flex flex-col gap-1'>
                                    <div className='flex flex-row justify-end mb-0'>
                                         <small className='text-slate-500 '>
-                                             {new Date(t.time).toLocaleDateString("en-IN")}{" "}
-                                             {new Date(t.time).toLocaleTimeString("en-IN", {
+                                             {new Date(t.createdAt).toLocaleDateString("en-IN")}{" "}
+                                             {new Date(t.createdAt).toLocaleTimeString("en-IN", {
                                                   hour: "2-digit",
                                                   minute: "2-digit"
                                              })}
@@ -24,7 +24,7 @@ function DisplayThoughts({ notes, deleteNote }) {
                                    </div>
                                    <div className='flex flex-row gap-2 justify-center px-4'>
                                         {/* <button className='text-black p-1 bg-green-600 hover:bg-green-500 rounded-md' >Competed</button> */}
-                                        <button className='text-black p-1 bg-red-600 hover:bg-red-500 rounded-md' onClick={() => deleteNote(t.id)}>Delete</button>
+                                        <button className='text-black p-1 bg-red-600 hover:bg-red-500 rounded-md' onClick={() => deleteNote(t)}>Delete</button>
                                    </div>
                               </div>
                          </div>

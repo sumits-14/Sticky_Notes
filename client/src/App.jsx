@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import DisplayThoughts from './Component/DisplayThoughts'
+import axios from 'axios'
 
 function App() {
 
@@ -11,35 +12,83 @@ function App() {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-
     setNote(prev => ({
       ...prev, [name]: value
     }))
   }
 
-  const submitNote = () => {
+  // Fetch all notes
 
-    if (note.line) {
-      const updatedContent = {
-        ...note,
-        time: new Date(),
-        id: Date.now()
-      }
+  const fetchNotes = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/notes"
+      )
 
-      setStoreNotes(prev => (
-        [...prev, updatedContent]
-      ))
+      setStoreNotes(response.data)
 
-      setNote({
-        line: "",
-      })
+    } catch (error) {
+      console.log(error)
     }
   }
 
-  const handleDelete = (id) => {
-    const updatedNotesList = storeNotes.filter(note => note.id !== id)
+  useEffect(() => {
+    fetchNotes()
+  },[])
 
-    setStoreNotes(updatedNotesList)
+
+  ////// Add notes
+
+  const submitNote = async () => {
+
+    try {
+      if(note.line){
+        await axios.post(
+          `http://localhost:5000/api/notes`,
+          note
+        )
+      }
+
+      fetchNotes()
+
+      setNote({
+        line: ""
+      })
+
+    } catch (error) {
+      console.log(error)
+    }
+
+    // if (note.line) {
+    //   const updatedContent = {
+    //     ...note,
+    //     time: new Date(),
+    //     id: Date.now()
+    //   }
+
+    //   setStoreNotes(prev => (
+    //     [...prev, updatedContent]
+    //   ))
+
+    //   setNote({
+    //     line: "",
+    //   })
+    // }
+  }
+
+  const handleDelete = async (note) => {
+    // const updatedNotesList = storeNotes.filter(note => note.id !== id)
+    // setStoreNotes(updatedNotesList)
+
+    try{
+      await axios.delete(
+        `http://localhost:5000/api/notes/${note._id}`
+      );
+
+      fetchNotes()
+    }catch (error){
+      console.log(error)
+    }
   }
 
   return (
